@@ -1,0 +1,32 @@
+%!TEX root = info-main.tex
+\section{Conclusion and Future Work}
+%
+In this paper, we present {\tt CUBIA}, a novel Wi-Fi tethering misbehavior
+detection mechanism that can accurately detect selfish behavior, e.g.,
+manipulating CCA threshold, via AP-level collaboration in multi-AP
+network environments.
+%
+We show that the benefits of MIM can be fully exploited and abused further
+by a selfish tethering node via CCA manipulation combined with its short
+link-distance.
+%
+We also observe that the consequence of the selfish tethering behavior resembles
+that of the hidden node problem, but selfish tethering nodes tend to ignore
+the RTS/CTS mechanism.
+%
+{\tt CUBIA} employs CUSUM algorithm for online detection of abnormal network
+behavior and inject RTS/CTS frames to avoid mis-diagnosing the hidden node
+problem as a selfish tethering.
+%
+Our simulation-based evaluation results show that {\tt CUBIA} accurately
+distinguishes the selfish tethering behavior from other types of misbehavior
+including the hidden node problem. 
+
+In future, we would like to extend our work to pinpoint and localize
+the selfish node based on the cooperation among APs.
+It would also be interesting to study effective system-level follow-up 
+actions against selfish tethering misbehavior, such as 
+jamming-resilient dynamic channel re-assignment.
+
+%To the best of our knowledge, this is the first attempt addressing the selfish
+%node problem in a tethering environment. 

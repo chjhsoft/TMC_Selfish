@@ -1,0 +1,260 @@
+%!TEX root = info-main.tex
+%%% Section IV
+\section{Detection Architecture in a Multi-AP Network}
+
+In this section, we first identify the key features of selfish
+carrier sensing behavior. We then propose an online detection
+architecture, called {\tt CUBIA}, that diagnoses the network
+condition in a multi-AP network, consisting of (i) a \emph{AP-level
+diagnosis} stage and (ii) a \emph{system-level reaction} stage.
+%
+In what follows, we will detail the design of this architecture.
+
+
+\subsection{Key Feature of Selfish Carrier Sense Behavior}
+
+Selfish carrier sensing on a tethered host node may result in
+excessive frame loss of nearby legitimate APs, and thus, successful
+detection of selfish misbehavior depend largely on a AP's ability
+of identifying the root cause of its frame losses.
+%
+In 802.11 WLANs, there are four main causes of frame losses:
+(i) PHY-layer link quality degradation, (ii) MAC-layer collision,
+(iii) hidden nodes, and (iv) selfish nodes (e.g., manipulation
+of the CCA thresholds).
+
+Fortunately, selfish tethering exhibits unique features that
+can help distinguishing the selfish carrier sensing of a
+tethering host from other causes of frame losses, especially
+from the hidden node problem.
+%
+We made the following two observations:
+
+\myitemizebegin
+%
+\item[{\bf O1)}]
+While the victim nodes of the selfish tethering experience
+symptoms similar to those of the \emph{hidden node problem}
+(i.e., transmissions of the legitimate node are continuously
+corrupted by the selfish node), the victim nodes' communications
+cannot be fully protected by the Request-to-Send/Clear-to-Send
+(RTS/CTS) exchange mechanism, i.e., a virtual carrier sensing,
+because the selfish node may not recognize (due to its short
+communication range) or respect the RTS/CTS frames.
+%
+%Unlike the hidden node problem, however, remedies are different.
+%That is, the hidden node problem can be mitigated by the
+%Request-to-Send/Clear-to-Send (RTS/CTS) exchange, i.e., the virtual
+%carrier sensing mechanism, but the selfish carrier sensing problem cannot,
+%because the RTS/CTS frames are not recognized/respected by the selfish
+%node due to its short communication range.
+%
+\item[{\bf O2)}]
+When selfish tethering exists, the victim nodes may suffer from
+increased number of frame losses, hence throughput degradation,
+because the selfish tethering initiates a transmission even when
+the victim nodes have already been transmitting packets.
+%
+In a multi-AP network, majority of nearby APs will likely to
+experience the similar severe packet errors simultaneously when
+the selfish tethering is present. In contrast, the impact of the
+hidden node problem is limited to the nodes in the hidden area.
+%
+\myitemizeend
+
+
+\subsection{CUBIA: A Proposed Selfish Diagnosis Algorithm}
+
+Based on the above observations, we propose a simple, yet efficient
+online detection algorithm at each AP, which can accurately distinguish
+the selfish behavior with CCA manipulation from other types of network
+problems, such as severe network congestion (i.e., collisions) and
+the hidden node problem.
+
+\subsubsection{Diagnosis Stage}
+%
+The first diagnosis stage is to infer the asymmetric carrier sensing
+condition at each AP in the network. Based on above observations,
+we propose a simple interference inference algorithm, called {\tt CUBIA}
+({\em Two-Phase CUsum-Based Interference inference with Adaptive RTS/CTS}).
+%
+%By exploiting the above observation on the unique feature of selfish
+%misbehavior using CCA manipulation, we propose a simple interference
+%inference algorithm, so called CUBIA ({\em Two-Phase CUsum-Based
+%Interference inference with Adaptive RTS/CTS}).
+%
+{\tt CUBIA} runs at each AP and it diagnoses the network condition by passively
+monitoring the ongoing traffic with its client nodes.
+%
+Specifically, if {\tt CUBIA} detects severe and persistent frame transmission
+failures, it employs the RTS/CTS exchange before each data transmission
+to rule out the possibility of the hidden node problem.
+%
+%differentiate the hidden node problem from frame transmission failures
+%by the selfish carrier sensing.
+%
+For this, {\tt CUBIA} employs the CUSUM (CUmulative SUM) algorithm~\cite{Gustafsson:2000}
+to quantify the duration of frame losses. CUSUM algorithm suits our needs
+because it is simple and light-weight, and it has been widely used for the
+detection of state changes. We will elaborate the detailed procedure of
+the detection mechanism using CUSUM algorithm.
+
+%As mentioned earlier, unlike the hidden node problem,
+%a data transmission following a successful RTS/CTS exchange
+%is not protected in the presence of a selfish node.
+%The heart of CUBIA algorithm is that,
+%to quantify how long the corruption lasts, it adopts the CUSUM
+%(CUmulative SUM) algorithm~\cite{Gustafsson:2000}, which has been
+%widely used for the detection of state changes.
+%
+% Jaehyuk: Due to the lack of 80211n node in simulation tools,
+%                   I changed the algorithm that is available in ns-2
+%
+%In particular, the AP exploits the frame aggregation and
+%block ACK mechanism in the 802.11 to diagnose the cause of
+%frame losses~\cite{ieee:80211e, ieee:80211n}.
+%
+%Frame aggregation is a feature of the IEEE 802.11e and 802.11n standards,
+%designed to increase throughput by sending two or more data frames
+%in a single transmission~\cite{ieee:80211e, ieee:80211n}.
+%%
+%802.11e EDCA provides contention-free access to the channel for a period
+%called {\em Transmit Opportunity} (TXOP), allowing multiple frames
+%to be transmitted in a single TXOP.
+%%
+%The 802.11n standard allows MAC Protocol Data Unit (MPDU) aggregation,
+%called A-MPDU, whereby multiple subframes are packed into
+%a single aggregated frame.
+%%
+%Block acknowledgments (block ACKs) allow an entire TXOP and A-MPDU
+%to be acknowledged in a single frame, reducing protocol overhead.
+
+%We made the following observation to detect the asymmetric carrier
+%sensing condition: in case of asymmetric carrier sensing condition
+%like the hidden node problem, the receiver of the ongoing transmission
+%of an aggregated frame (e.g., A-MPDU) can suffer from \emph{partial}
+%and \emph{bursty} frame losses.
+%
+%
+%%% alex: why this is the case?
+%In particular, bit errors are likely to be located after the front
+%section of the aggregated transmission, while the front section of the
+%transmission has a much lower probability of incurring bit errors
+%compared to the rest of the packet.
+%
+%
+%%
+%%  [FIGURE]
+%%Fig.~X shows the
+%%[Experiment results should be here]
+%
+%Then, the receiver reports the status (i.e., success/failure) of each
+%subframe of the A-MPDU frame to the transmitter via a block ACK frame.
+%Consequently, the transmitter node can know the result of the
+%transmission and calculate the error probability of subframes.
+
+{\tt CUBIA} monitors the frame error rate (FER) for every $m$ transmissions
+to detect any abrupt changes in network condition, which might indicate
+the possibility of selfish tethering nodes.
+%
+Let $p_{k}^{i}$ denote the frame error rate for the $k$-th measurement
+period at $AP_i$, given by $p_{k}^{i} = e_{k}/m$, where $e_{k}$ denotes
+the number of transmission failures. Then, we calculate the average
+error probability, $E[p^{i}]$, by a moving average to reflect the
+network dynamics as:
+%
+\begin{equation} \label{Eq:move_avg}
+E[p^{i}] = \lambda \cdot E[p^{i}]  + (1 - \lambda) \cdot p_{k}^{i}.
+\end{equation}
+
+We define the CUSUM change detection filter $c_k^i$ of $AP_i$ as:
+\begin{eqnarray}
+&c_k^i = \max(~0, ~c_{k-1}^i + p_{k}^{i} - v~),\label{Eq:CUSUMg} \\
+&c_0^i = 0,\nonumber
+\end{eqnarray}
+where $v$ is a drift parameter, which is a filter design parameter.
+$v$ is configured differently according to the value of $c_k^i$ as:
+%
+\begin{equation}\label{Eq:CUSUMv}
+v =
+\begin{cases}
+E[p^{i}] + \mathcal{T}_{FER},  & \mbox{if } c_k^i < \theta_{AS} \\
+\mathcal{T}_{FER}, & \mbox{if } \theta_{AS} \leq  c_k^i \leq \theta_{S},
+\end{cases}
+\end{equation}
+%
+where $\theta_{AS}$ and $\theta_{S}$ denote
+the {\em first alarm threshold} for asymmetric carrier sensing, and
+the {\em second alarm threshold} for inferring selfish carrier sensing,
+respectively.
+
+{\tt CUBIA} issues the first alarm to $AP_i$ when $c_k^i > \theta_{AS}$.
+Then, {\tt CUBIA} turns on the RTS/CTS exchange mechanism, and
+keeps track of the change detection with
+$v = \mathcal{T}_{FER}$ in Eq.~\eqref{Eq:CUSUMg}.
+%
+Note that the first alarm can be caused by
+a sudden severe MAC-layer congestion or a hidden node problem.
+%
+%
+However, in such a case,
+%i.e., if the first alarm stems from the MAC-layer congestion or
+%the hidden terminal problem,
+the magnitude of $c_k^i$ tends to decrease with RTC/CTS frames,
+because the the collisions are filtered out \cite{CARA} and
+the hidden terminal problem are mitigated with RTS/CTS
+exchange, and the frame error rate decreases accordingly.
+
+On the other hand, if the first alarm is caused by the selfish carrier
+sensing problem, the transmission of a frame transmission following
+successful RTS/CTS exchanges will be interfered with, and hence,
+ even with RTS/CTS, the magnitude of $c_k^i$ would continue to
+increase, even beyond $\theta_{S}$.
+%
+%
+Recall that under the normal condition, PHY-layer link quality is stable
+and has a certain upper bound $\mathcal{T}_{FER}$, namely \emph{target}
+frame error rate, which is guaranteed by the underlying rate-adaptation
+scheme that adjusts the modulation schemes to meet the target
+FER.\footnote{For example, practical rate adaptations \cite{Jensen10}
+adjust the modulation schemes to meet the target FER (frame error rate),
+and thus guarantee the average FER performance to be maintained
+around the target value.}
+
+Consequently, $AP_i$ sends a second alarm to the central controller
+(see Fig.~\ref{fig-architecture}) if $c_k^i > \theta_{S}$,
+which may trigger the \emph{reaction}
+to solve the selfish carrier sensing problem.
+
+\subsubsection{Reaction Stage}
+%
+Although the focus of this paper is to propose an AP-level detection
+mechanism, it is important to cope with the selfish misbehavior detected
+whin the network at the system level.
+% 
+%Here, we present a simple decision policy with which the controller
+%determines when to take follow-up actions to cope with the selfish
+%misbehavior detected whin the network.
+% Jaehyuk
+Here, we discuss how the controller determines when to take 
+follow-up actions to cope with the selfish misbehavior detected 
+whin the network.
+
+In typical managed Wi-Fi networks, the information obtained at APs
+is integrated on the controller. Then, the controller utilizes
+the information to improve the detection accuracy.
+%
+As explained in observation {\bf O2}, majority of nearby APs will likely 
+to experience the similar severe packet errors simultaneously when
+the selfish tethering is present. Consequently, the victim APs send
+the second alarm to the controller at the same time.
+By exploiting the spatial and temporal correlation in those alarms, 
+the controller identifies the root of the problem more effectively and 
+accurately. 
+%
+For example, if a certain condition is satisfied,
+the controller can take various follow-up actions, which can
+be (i) localizing the rogue interfering node~\cite{Joshi:Katti2013},
+and (ii) remedying victim APs (e.g., interference-aware channel
+reassignment), etc. However, the detailed follow-up actions are
+beyond the scope of this paper.

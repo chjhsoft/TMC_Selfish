@@ -1,0 +1,213 @@
+%!TEX root = info-main.tex
+\section{Introduction}
+
+%Driven by the huge success of smartphones,
+%Wi-Fi tethering has recently been recognized
+%as an attractive means to provide Internet connectivity.
+%The Wi-Fi tethering refers to sharing
+%the Internet connection of mobile devices, such as smartphones and
+%tablets, with another Wi-Fi-enabled devices through
+%Wi-Fi~\cite{Choi:Shin11}.
+%%
+%One of the major benefits of tethering with a smartphone is
+%that it enables users to go online almost anywhere, even on-the-move.
+%
+With the rapidly-increasing deployment of mobile devices and skyrocketing
+demand for mobile data traffic~\cite{Cisco:13}, Wi-Fi has been the
+most widely-available and energy-efficient means to provide the Internet
+access to mobile users and devices~\cite{Balasubramanian:09}.
+%
+While most of the today's mobile devices are equipped with Wi-Fi
+interfaces, supporting very high throughput performance even with
+small form-factor smartphones, e.g., up to 433\,Mbps for
+802.11ac,\footnote{The new 802.11ac standard supports up to several
+Gbps of throughput depending on transmission configurations, e.g.,
+the number of antennae and channel bandwidth.} the limited and short
+coverage of Wi-Fi networks restrict their usage.
+%
+For example, a mobile user may not be able to find a Wi-Fi access
+point (AP) while traveling by a car on a highway. Or a mobile
+user in a coffee shop may find an AP with very limited bandwidth
+because many people share the same AP.
+%
+To address these issues, Wi-Fi tethering has recently been gaining
+popularity as a means to provide Internet connectivity by sharing the
+Internet connection of mobile devices with another Wi-Fi-enabled devices
+through Wi-Fi~\cite{Choi:Shin11}.
+
+While Wi-Fi tethering allows mobile users to go online almost anywhere,
+even on-the-move, the ease of setting up a tethered Wi-Fi hotspot
+and the open source nature of mobile Operating Systems (OSes) can pose
+serious performance problems to well-planned Wi-Fi networks, such as
+enterprise and campus networks~\cite{Himanshu2010}.
+%
+Since the tethered Wi-Fi hotspot can potentially open up the network
+with an arbitrary channel number without restriction from the network
+administrator, it may interfere with nearby well-planned APs and cause
+unpredictable performance degradation, e.g., availability and throughput.
+%cause performance problems inside the network.
+%
+Even worse, the open and customizable nature of mobile OSes, such as
+Google Android~\cite{Android}, can be further abused by misbehaving
+devices/users to gain an unfair advantage in throughput performance
+by manipulating the tethering function.
+%
+For example, by rooting or jailbreaking mobile OSes, the channel access
+functions of Wi-Fi protocol, i.e., IEEE 802.11, can be manipulated
+``selfishly,'' at the cost of other nearby well-behaving Wi-Fi
+devices' performance.
+%
+Therefore, it is essential to design an efficient mechanism to detect
+unauthorized and misconfigured Wi-Fi tethering.
+
+In this paper, we observe the network throughput behavior in a multi-AP
+environment in the presence of a selfish tethering node, and study the
+impact of selfish tethering on other users' throughput performance.
+%
+Our evaluation results reveal that the symptoms of selfish tethering
+resembles that of the well-known hidden node problem---both result in a
+high frame transmission error rate.
+%
+However, the main difference is that the frame losses at legitimate nodes
+caused by the selfish tethering cannot be easily resolved by the RTS/CTS
+mechanism because the selfish nodes may not recognize the RTS/CTS frames
+due to their manipulated CCA thresholds, or RTS/CTS frames can be easily
+ignored by the selfish nodes.
+%
+Therefore, it is imperative to design a detection mechanism that can
+identify the root cause of the throughput degradation and pinpoint the
+selfish node in the network.
+
+Based on our observations, we present an online Wi-Fi tethering
+detection mechanism, called {\tt CUBIA}, that can accurately detect
+selfish Wi-Fi tethering nodes in a multi-AP environment.
+%
+{\tt CUBIA} runs at each AP and passively monitors the channel-access
+success/failure behavior of ongoing data traffic to detect any abnormal
+changes caused by selfish tethering.
+%
+In particular, it monitors any noticeable increase in frame loss rate to
+trigger the second-phase detection mechanism, where it attempts to identify
+the root cause of the frame loss, e.g., selfish tethering or
+hidden node problem.
+%
+For this, we formulate the selfish tethering detection problem as a
+hypothesis testing problem and employs a modified CUSUM algorithm.
+%
+% alex: need to revise below based on evaluation results
+We evaluate {\tt CUBIA} with an in-depth simulation in various
+wireless environments, and our evaluation results show high
+detection accuracy.
+%
+To best of our knowledge, this is the first to consider the problem
+of detecting selfish misconfigured Wi-Fi tethering nodes in
+a multi-AP network.
+
+
+\subsection{Contributions}
+
+This paper makes several contributions as follows.
+%
+\myitemizebegin
+%
+\item We observe that concurrent transmission mechanisms, e.g.,
+PHY capture or MIM, can be abused by selfish nodes, and study
+the impact of the selfish Wi-Fi tethering behavior on
+the throughput performance of other nearby well-behaving nodes.
+%
+\item We propose a selfish misbehavior detection mechanism,
+called {\tt CUBIA}, that can accurately identify the cause of
+frame losses and detect selfish behavior under strict detection
+latency requirements.
+%
+\item We design a two-step detection process using an online
+change detection algorithm, i.e., CUSUM, based on passive
+monitoring of frame loss rates at multiple APs. We also
+study the impact of detection thresholds on detection
+latency/accuracy performance.
+%
+\item We perform extensive simulation-based evaluation for
+various network conditions. Our evaluation results show that
+{\tt CUBIA} can promptly detect selfish behavior with high
+accuracy in realistic wireless environments.
+%
+\myitemizeend
+
+\subsection{Related Work}
+
+Selfish and malicious misbehavior in CSMA networks has been
+extensively studied under various scenarios in different 
+communication layers.
+%~\cite{K:Vaidya05, Radosavac-Wise05, Raya-DOMINO, Toledo:Wang07a}.
+%
+%MAC-layer
+Majority of previous work has concentrated on detecting or punishing
+MAC-layer misbehavior~\cite{K:Vaidya05, Raya-DOMINO, Radosavac-Wise05,
+Toledo:Wang07a}.
+%
+In~\cite{K:Vaidya05}, Kyasanur and Vaidya studied the MAC-layer
+misbehavior of selecting always small backoff values rather than
+random selection, and showed that such selfish misbehavior can
+seriously degrade the network performance.
+%
+Raya {\em et al.}~\cite{Raya-DOMINO} investigated multiple misbehavior
+policies in 802.11 MAC protocol including backoff manipulations, and
+presented a detection framework, called {\tt DOMINO}, which considers
+all possible strategies jointly and improves the detection accuracy.
+%
+Several statistic-based frameworks for detecting misbehavior
+also have been introduced~\cite{Radosavac-Wise05, Toledo:Wang07a}.
+%
+%The common approach~\cite{K:Vaidya05, Radosavac-Wise05, Raya-DOMINO,
+%Toledo:Wang07a} is to measure the inter-arrival time of target
+Their common detection approach is to measure the inter-arrival time
+of target stations in terms of the number of backoff slots and verify
+whether the backoff time of the stations follows a legitimate pattern
+or not.
+%
+Recently, the authors in~\cite{Tang:Zhuang13} proposed a
+non-parametric CUSUM test to detect real-time selfish misbehavior 
+in 802.11 networks.
+% alex: what is the main difference between our work and Zhuang13?
+%
+The problem of selfish misbehavior also has been addressed in several
+different layers and perspectives, including routing
+layers~\cite{BenSalem03, Marti03}, multi-channel
+protocols~\cite{Zhang:Lazos13}, and game theory-based
+behaviors~\cite{MacKenzie01,Akella02}.
+
+%%
+The problem of misbehavior using CCA threshold is relatively new 
+and unexplored in the literature. In~ \cite{yang:choi-LCN09}, the
+authors have identified the effect of an 802.11 node's selfish
+behavior by increasing CCA threshold.
+%
+They have shown that the selfish behavior can achieve higher
+throughput than other well-behaving nodes based on a game-theoretical
+model.
+%
+Recently, the authors in~\cite{Pelechris:Krish-Infocom09} addressed
+the selfish carrier sense problem in a Wireless LAN (WLAN).
+The authors have performed experimentation on a real-world testbed 
+and shown that such selfish behaviors can cause extremely unfair
+allocations of the wireless medium.
+%
+However, none of these studies considered the problem of the selfish
+problem exploiting Wi-Fi tethering environments.
+
+
+\subsection{Organization}
+%
+The remainder of paper is organized as follows.
+%
+Section~2 describes the system model and adversary model.
+%
+Section~3 illustrates the impact of selfish manipulation of the
+CCA thresholds on throughput performance in multi-AP environments.
+%
+Section~4 identifies the unique features of selfish tethering and
+proposes {\tt CUBIA} that accurately detects the selfish behavior.
+%
+Section~5 presents the evaluation results and Section~6 concludes 
+the paper.
+

@@ -1,0 +1,152 @@
+\section{Related Work}
+
+Selfish and malicious misbehavior in CSMA networks
+has been extensively studied 
+under various scenarios in different communication layers.
+\cite{Kysanur:Vaidya05, Radosavac-Wise05, Raya-DOMINO, Toledo:Wang07a}.
+%However,
+%to the best of our knowledge, this is the first work that
+%addresses the selfish misbehavior exploiting
+%the Wi-Fi tethering environment.
+
+%MAC-layer
+Majority of previous work has concentrated on detecting or punishing
+MAC-layer misbehavior \cite{Kysanur:Vaidya05, Raya-DOMINO, Radosavac-Wise05, Rong-Infocom06, Toledo:Wang07a}.
+%
+The authors of \cite{Kysanur:Vaidya05} have addressed the MAC layer misbehavior
+selecting always small backoff values rather than random selection
+and showed that such selfish misbehavior
+can seriously degrade the performance of the network. To detect and penalize
+the selfish misbehavior, they modified the MAC protocol and proposed a
+receiver-side backoff allocation strategy where let
+the receiver assign and send backoff values to the sender in
+CTS and ACK frames.
+Then, the assigned receiver uses them to detect potential misbehavior.
+However, it needs to modification on the IEEE
+802.11 protocol and the selfish receiver may exist.
+%
+In \cite{Radosavac-Wise05},
+several possible misbehavior in 802.11 MAC protocol including
+backoff manipulation are presented.
+A detection framework, named DOMINO, considers
+every possible strategies jointly and increases the detection accuracy.
+The detection scheme for backoff manipulation is based on comparing
+average values of the backoff to given thresholds.
+However, this average metric is a suboptimal detection technique easily
+misled by extremely large values of samples.
+Some previous works~\cite{Toledo:Wang07a, Radosavac-Wise05} have utilized
+statistical testing techniques such as
+the Wald��s sequential probability ratio test~(SPRT)~\cite{Radosavac-Wise05},
+Kolmogorov-Smirnov (K-S) test~\cite{Toledo:Wang07a}.
+These works were important sources of inspiration for our work.
+However, their operation cost is much higher
+than our detection mechanism since their frameworks are
+based on the comparison of distributions and
+need to construct the probability distributions from
+the observations. Moreover, no operational method to mitigate misbehavior
+is proposed.
+
+
+%Physical-layer
+Some previous work has focused on routing layer misbehavior\cite{BenSalem03, Marti03}.
+In 
+
+% Routing-layer
+Various solutions to routing layer misbehavior
+(e.g., \cite{BenSalem03, Marti03})
+and game theory-based approaches~\cite{MacKenzie01,Akella02} in wireless
+ad hoc networks have been proposed.
+
+%Multi-channel
+
+
+%CCA Threshold
+
+
+
+
+
+In our previous work,
+
+
+A common way for a selfish user to increase his chance of accessing
+the channel is to modify the operation of the 802.11 protocol
+or change the MAC parameters related with
+channel-attempt parameters, such as $CW_{min}$,
+$CW_{max}$, and IFS~(inter-frame space).
+Kyasanur and Vaidya \cite{Kysanur:Vaidya05} studied the MAC-layer misbehavior
+of selecting always small backoff values rather than
+random selection, and showed that such selfish misbehavior can
+seriously degrade the network performance.
+Raya {\em et al.}~\cite{Raya-DOMINO} investigated
+multiple misbehavior policies in 802.11 MAC protocol including
+backoff manipulations, and presented a detection framework, called DOMINO,
+which considers all possible strategies jointly and improves the detection accuracy.
+Recently, several statistic-based frameworks for detecting misbehavior
+also have been introduced \cite{Radosavac-Wise05, Rong-Infocom06, Toledo:Wang07a}.
+The common approach used in most prior works\cite{Kysanur:Vaidya05, Radosavac-Wise05,
+Raya-DOMINO, Toledo:Wang07a} is to measure the inter-arrival time of target stations
+in terms of the number of backoff slots and verify whether the backoff time of the stations follows a legitimate pattern or not.
+
+
+Protocol misbehavior in 802.11 networks has been studied
+in various scenarios in different communication layers.
+The authors of \cite{Kysanur:Vaidya05} have addressed the MAC layer misbehavior
+selecting always small backoff values rather than random selection
+and showed that such selfish misbehavior
+can seriously degrade the performance of the network. To detect and penalize
+the selfish misbehavior, they modified the MAC protocol and proposed a
+receiver-side backoff allocation strategy where let
+the receiver assign and send backoff values to the sender in
+CTS and ACK frames.
+Then, the assigned receiver uses them to detect potential misbehavior.
+However, it needs to modification on the IEEE
+802.11 protocol and the selfish receiver may exist.
+%
+In \cite{Radosavac-Wise05},
+several possible misbehavior in 802.11 MAC protocol including
+backoff manipulation are presented.
+A detection framework, named DOMINO, considers
+every possible strategies jointly and increases the detection accuracy.
+The detection scheme for backoff manipulation is based on comparing
+average values of the backoff to given thresholds.
+However, this average metric is a suboptimal detection technique easily
+misled by extremely large values of samples.
+Some previous works~\cite{Toledo:Wang07a, Radosavac-Wise05} have utilized
+statistical testing techniques such as
+the Wald��s sequential probability ratio test~(SPRT)~\cite{Radosavac-Wise05},
+Kolmogorov-Smirnov (K-S) test~\cite{Toledo:Wang07a}.
+These works were important sources of inspiration for our work.
+However, their operation cost is much higher
+than our detection mechanism since their frameworks are
+based on the comparison of distributions and
+need to construct the probability distributions from
+the observations. Moreover, no operational method to mitigate misbehavior
+is proposed.
+
+% Routing-layer
+Various solutions to routing layer misbehavior
+(e.g., \cite{BenSalem03, Marti03})
+and game theory-based approaches~\cite{MacKenzie01,Akella02} in wireless
+ad hoc networks have been proposed. However, as the problem we
+consider in this paper focuses on the MAC layer.
+
+%Multi-channel
+
+%%
+The problem of misbehavior using CCA threshold is relatively new
+and unexplored in the literature.
+Recently, the authors~\cite{yang:choi-LCN09} have identified the effect of an
+802.11 node's selfish behavior by increasing CCA threshold.
+They have shown that the selfish behavior can achieve
+higher throughput than other rational nodes based on
+proposed game-theoretical model.
+In \cite{Pelechris:Krish-Infocom09}, the selfish carrier sense problem
+in WLANs was addressed. The authors have performed experimentation
+on a real testbed and shown that such selfish behaviors can
+cause extremely unfair allocations of the wireless medium.
+We develop a detection scheme, named Carrier
+sensing Misbehavior Detectio (CMD),
+by exploiting power control mechanism.
+
+
